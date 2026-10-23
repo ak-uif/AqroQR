@@ -10,14 +10,17 @@ const areaLabels = {
   ru: { zoom: "Приблизьте карту, чтобы увидеть цветную область", area: "Цветные точки обозначают примерную область" }
 };
 
+const AREA_RADIUS_KM = 16;
+const AREA_GRID_RADIUS = 4;
+
 function areaPoints([latitude, longitude]: [number, number]) {
   const points: [number, number][] = [];
-  const latitudeRadius = 26 / 111;
-  const longitudeRadius = 26 / (111 * Math.cos(latitude * Math.PI / 180));
-  for (let row = -6; row <= 6; row++) {
-    for (let column = -6; column <= 6; column++) {
-      const x = column / 6;
-      const y = row / 6;
+  const latitudeRadius = AREA_RADIUS_KM / 111;
+  const longitudeRadius = AREA_RADIUS_KM / (111 * Math.cos(latitude * Math.PI / 180));
+  for (let row = -AREA_GRID_RADIUS; row <= AREA_GRID_RADIUS; row++) {
+    for (let column = -AREA_GRID_RADIUS; column <= AREA_GRID_RADIUS; column++) {
+      const x = column / AREA_GRID_RADIUS;
+      const y = row / AREA_GRID_RADIUS;
       const boundary = 0.94 + 0.06 * Math.sin(row * 1.8 + column * 0.7);
       if (x * x + y * y > boundary * boundary) continue;
       const nudge = Math.sin(row * 13 + column * 7) * 0.008;
@@ -73,7 +76,7 @@ export function MapView({ places, language, selectedId, onSelect }: { places: Pl
           if (!bounds.contains(place.coordinates)) return;
           const selected = place.id === selectedId;
           const color = selected ? "#ce812c" : colors[placeIndex % colors.length];
-          L.circle(place.coordinates, { radius: 26000, color, weight: 2, dashArray: "2 8", fillColor: color, fillOpacity: selected ? 0.09 : 0.05, interactive: false }).addTo(areaLayer!);
+          L.circle(place.coordinates, { radius: AREA_RADIUS_KM * 1000, color, weight: 2, dashArray: "2 8", fillColor: color, fillOpacity: selected ? 0.09 : 0.05, interactive: false }).addTo(areaLayer!);
           areaPoints(place.coordinates).forEach((point) => {
             L.circleMarker(point, { radius: map.getZoom() >= 10 ? 2.6 : 1.9, stroke: false, fillColor: color, fillOpacity: selected ? 0.82 : 0.65, interactive: false }).addTo(areaLayer!);
           });
