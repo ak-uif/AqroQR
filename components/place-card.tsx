@@ -18,7 +18,7 @@ export function PlaceCard({ place, featured = false }: { place: Place; featured?
       <div className="place-card__body">
         <div className="place-card__meta"><span><MapPin size={14} />{text.region}</span><span>{text.category}</span></div>
         <h3>{text.name}</h3><p>{text.description}</p>
-        <div className="place-card__actions"><Link href={`/places?detail=${place.id}`} className="text-link">{t("details")} <ArrowUpRight size={15} /></Link><Link href={`/places?reserve=${place.id}`} className="button button--small button--primary">{t("reserve")}</Link></div>
+        <div className="place-card__actions"><Link href={`/places?detail=${place.id}`} className="text-link">{t("details")} <ArrowUpRight size={15} /></Link><Link href={`/checkout?place=${place.id}`} className="button button--small button--primary">{t("reserve")}</Link></div>
       </div>
     </article>
   );

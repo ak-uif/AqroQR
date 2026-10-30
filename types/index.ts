@@ -39,6 +39,19 @@ export type ReservationRequest = {
   note: string;
   status: "pending" | "confirmed" | "completed" | "cancelled";
   createdAt: string;
+  userId?: string;
+  placeName?: string;
+  totalAmount?: number;
+  paymentMethod?: "card" | "onsite";
+  paymentStatus?: "paid" | "pending";
+};
+
+export type NewReservationInput = Pick<ReservationRequest, "placeId" | "date" | "participants" | "activity"> & {
+  userId: string;
+  placeName: string;
+  totalAmount: number;
+  paymentMethod: "card" | "onsite";
+  paymentStatus: "paid" | "pending";
 };
 
 export type Notification = {

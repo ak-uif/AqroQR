@@ -22,11 +22,15 @@ npm run build
 
 - Qonaq və Azərbaycan vətəndaşı üçün tanışlıq axını;
 - regionlara görə axtarış və süzgəcli məkan kataloqu;
-- ətraflı məkan məlumatı və rezervasiya müraciəti;
+- ətraflı məkan məlumatı və dörd addımlı rezervasiya/ödəniş axını;
 - OpenStreetMap xəritəsi, yaxınlaşdırma və region markerləri;
 - müraciətlər, bildirişlər, profil seçimləri və dil dəyişimi.
 
-Əsas səhifələr: `/`, `/dashboard`, `/places`, `/map`, `/requests`, `/notifications`, `/about`, `/profile`.
+Əsas səhifələr: `/`, `/dashboard`, `/places`, `/map`, `/checkout?place=quba-orchard`, `/requests`, `/notifications`, `/about`, `/profile`.
+
+## Rezervasiya sınağı
+
+“Rezerv et” düyməsi tarix, qonaq məlumatları, ödəniş üsulu və yekun yoxlama addımlarını açır. `AQRO10` kodu sınaq endirimi verir. Kart axınında yalnız test nömrələrindən istifadə edin: `4242 4242 4242 4242` uğurlu, `4000 0000 0000 0002` uğursuz nəticə göstərir. Hər iki nəticə yalnız brauzerdə simulyasiya olunur; real ödəniş tutulmur. Kart nömrəsi, bitmə tarixi və CVV yaddaşa yazılmır. Uğurlu rezervasiyanın yalnız təhlükəsiz xülasəsi `aqroqr:requests` açarında saxlanılır və “Müraciətlərim” bölməsində görünür.
 
 ## Vacib qeyd
 

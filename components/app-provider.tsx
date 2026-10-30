@@ -3,7 +3,7 @@
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { seedNotifications } from "@/data/mock-places";
 import { translate } from "@/lib/i18n";
-import type { Notification, ProfilePreferences, ReservationRequest, SessionUser, SupportedLanguage } from "@/types";
+import type { NewReservationInput, Notification, ProfilePreferences, ReservationRequest, SessionUser, SupportedLanguage } from "@/types";
 
 type AppContextValue = {
   language: SupportedLanguage;
@@ -14,7 +14,7 @@ type AppContextValue = {
   login: (user: SessionUser) => void;
   logout: () => void;
   requests: ReservationRequest[];
-  addRequest: (request: Omit<ReservationRequest, "id" | "createdAt" | "status">) => void;
+  addRequest: (request: NewReservationInput) => ReservationRequest;
   cancelRequest: (id: string) => void;
   notifications: Notification[];
   markNotificationRead: (id: string) => void;
@@ -70,13 +70,28 @@ export function AppProvider({ children }: { children: ReactNode }) {
     window.localStorage.removeItem("aqroqr:session");
   };
 
-  const addRequest = (input: Omit<ReservationRequest, "id" | "createdAt" | "status">) => {
-    const request: ReservationRequest = { ...input, id: crypto.randomUUID(), createdAt: new Date().toISOString(), status: "pending" };
+  const addRequest = (input: NewReservationInput) => {
+    const request: ReservationRequest = {
+      id: crypto.randomUUID(),
+      userId: input.userId,
+      placeId: input.placeId,
+      placeName: input.placeName,
+      activity: input.activity,
+      date: input.date,
+      participants: input.participants,
+      totalAmount: input.totalAmount,
+      paymentMethod: input.paymentMethod,
+      paymentStatus: input.paymentStatus,
+      note: "",
+      status: "pending",
+      createdAt: new Date().toISOString()
+    };
     setRequests((current) => {
       const next = [request, ...current];
       window.localStorage.setItem("aqroqr:requests", JSON.stringify(next));
       return next;
     });
+    return request;
   };
 
   const cancelRequest = (id: string) => {
