@@ -25,8 +25,23 @@ npm run build
 - ətraflı məkan məlumatı və dörd addımlı rezervasiya/ödəniş axını;
 - OpenStreetMap xəritəsi, yaxınlaşdırma və region markerləri;
 - müraciətlər, bildirişlər, profil seçimləri və dil dəyişimi.
+- ayrı fermer paneli: qeydiyyat, təsərrüfat profili, məhsul və tədbir elanları, gələn sifarişlər;
+- Aqro Bazar: məhsul filtrləri, ətraflı məlumat, fermerlə əlaqə və sifariş istəyi;
+- təsdiqlənmiş fermer tədbirlərinin Məkanlar və rezervasiya axınında göstərilməsi.
 
 Əsas səhifələr: `/`, `/dashboard`, `/places`, `/map`, `/checkout?place=quba-orchard`, `/requests`, `/notifications`, `/about`, `/profile`.
+
+Fermer səhifələri: `/farmer`, `/farmer/register`, `/farmer/login`, `/farmer/dashboard`, `/farmer/products`, `/farmer/products/new`, `/farmer/events`, `/farmer/events/new`, `/farmer/orders`, `/farmer/notifications`, `/farmer/profile`.
+
+Aqro Bazar səhifələri: `/marketplace`, `/marketplace/[id]`, `/marketplace/orders`.
+
+## Fermer və Aqro Bazar sınağı
+
+Başlanğıc səhifəsində “Fermerlər üçün” seçib üç addımlı qeydiyyatı tamamlayın. Sənəd yüklənmir, qeydiyyat şifrəsi və əlavə yoxlama sahələri yadda saxlanmır. Hazır nümunə hesabı ilə daxil olmaq üçün `/farmer/login` səhifəsində göstərilən e-poçtu yazmaq kifayətdir; bu, real autentifikasiya deyil.
+
+Fermer məhsulu və ya tədbiri qaralama kimi saxlayıb sonradan düzəldə, yaxud yoxlamaya göndərə bilər. Profil səhifəsindəki “Nümayiş üçün yoxlama vəziyyətini dəyiş” idarəsi və elan siyahısındakı “Nümayiş təsdiqi” düymələri yalnız yerli status simulyasiyasıdır. Profil və elan təsdiqlənəndə məhsul Aqro Bazarda, tədbir isə Məkanlar bölməsində görünür. Admin paneli və real təsdiq xidməti yoxdur.
+
+Aqro Bazar sifarişi yalnız istək yaradır; real ödəniş və çatdırılma təşkil olunmur. Sifarişin tam telefon nömrəsi, ünvanı və qeydi yalnız cari baxışın yaddaşındadır; `localStorage`-da maskalanmış telefon və sifariş xülasəsi saxlanılır. Səhifə yeniləndikdə tam əlaqə məlumatı itir. Fermer profili, elanlar və sifariş xülasələri yalnız brauzerin yerli yaddaşında qalır. Nümunə məhsul və satıcı məlumatları real ticarət təklifi deyil.
 
 ## Rezervasiya sınağı
 

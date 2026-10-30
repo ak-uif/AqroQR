@@ -28,6 +28,9 @@ export type Place = {
   coordinates: [number, number];
   visual: string;
   demo: boolean;
+  imageUrl?: string;
+  eventDate?: string;
+  eventTime?: string;
 };
 
 export type ReservationRequest = {

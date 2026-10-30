@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { AppProvider } from "@/components/app-provider";
+import { MarketplaceProvider } from "@/components/marketplace-provider";
 
 export const metadata: Metadata = {
   title: "AqroQR | Aqro dünyanı kəşf et",
@@ -11,7 +12,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="az" data-scroll-behavior="smooth">
       <body>
-        <AppProvider>{children}</AppProvider>
+        <AppProvider><MarketplaceProvider>{children}</MarketplaceProvider></AppProvider>
       </body>
     </html>
   );

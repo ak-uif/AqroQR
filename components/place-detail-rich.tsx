@@ -10,9 +10,9 @@ import type { Place } from "@/types";
 export function PlaceDetailRich({ place, onReserve }: { place: Place; onReserve: () => void }) {
   const { t, language } = useApp();
   const text = placeText(place, language);
-  const story = placeDetails[place.id];
+  const story = placeDetails[place.id] ?? {overview:{az:place.description.az,en:place.description.en,ru:place.description.ru},highlights:[{az:place.activity.az,en:place.activity.en,ru:place.activity.ru}],tip:{az:"Tədbir məlumatları təqdimat xarakterlidir. Rezervasiyadan əvvəl detalları yoxlayın.",en:"Tədbir məlumatları təqdimat xarakterlidir.",ru:"Tədbir məlumatları təqdimat xarakterlidir."}};
   return <div className="rich-detail">
-    <div className={`rich-detail__photo place-visual--${place.visual}`} role="img" aria-label={text.name} />
+    <div className={`rich-detail__photo place-visual--${place.visual}`} style={place.imageUrl?{backgroundImage:`url("${place.imageUrl}")`}:undefined} role="img" aria-label={text.name} />
     <div className="rich-detail__intro"><span className="place-card__meta"><MapPin size={15} />{text.region} · {text.category}</span><p>{story.overview[language]}</p></div>
     <div className="rich-detail__facts"><span><Clock3 size={18} /><small>{t("duration")}</small><strong>{text.duration}</strong></span><span><Users size={18} /><small>{t("capacity")}</small><strong>{place.capacity}</strong></span><span><CalendarDays size={18} /><small>{t("price")}</small><strong>{place.price} AZN</strong></span></div>
     <div className="rich-detail__sections"><section><h3>{t("detailHighlights")}</h3><ul>{story.highlights.map((item) => <li key={item.az}><Check size={16} />{item[language]}</li>)}</ul></section><aside><h3>{t("detailGoodToKnow")}</h3><p>{story.tip[language]}</p><div className="rich-detail__notice"><Info size={17} /><span>{t("detailDisclaimer")}</span></div></aside></div>

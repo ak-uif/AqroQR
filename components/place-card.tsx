@@ -14,7 +14,7 @@ export function PlaceCard({ place, featured = false }: { place: Place; featured?
   const text = placeText(place, language);
   return (
     <article className={`place-card ${featured ? "place-card--featured" : ""}`}>
-      <div className={`place-visual place-visual--${place.visual}`} role="img" aria-label={`${text.category}: ${text.name}`} />
+      <div className={`place-visual place-visual--${place.visual}`} style={place.imageUrl?{backgroundImage:`url("${place.imageUrl}")`,backgroundSize:"cover",backgroundPosition:"center"}:undefined} role="img" aria-label={`${text.category}: ${text.name}`} />
       <div className="place-card__body">
         <div className="place-card__meta"><span><MapPin size={14} />{text.region}</span><span>{text.category}</span></div>
         <h3>{text.name}</h3><p>{text.description}</p>

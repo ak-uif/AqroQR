@@ -8,11 +8,12 @@ import { AppShell } from "@/components/app-shell";
 import { Modal } from "@/components/modal";
 import { PlaceCard, placeText } from "@/components/place-card";
 import { PlaceDetailRich } from "@/components/place-detail-rich";
-import { mockPlaces } from "@/data/mock-places";
+import { useMarketplace } from "@/components/marketplace-provider";
 import type { Place } from "@/types";
 
 export function PlacesClient() {
   const { t, language } = useApp();
+  const { publicPlaces } = useMarketplace();
   const router = useRouter();
   const params = useSearchParams();
   const [query, setQuery] = useState("");
@@ -23,20 +24,20 @@ export function PlacesClient() {
   useEffect(() => {
     const detail = params.get("detail");
     const reserve = params.get("reserve");
-    if (detail) setDetailPlace(mockPlaces.find((place) => place.id === detail) ?? null);
-    if (reserve && mockPlaces.some((place) => place.id === reserve)) router.replace(`/checkout?place=${reserve}`);
-  }, [params, router]);
+    if (detail) setDetailPlace(publicPlaces.find((place) => place.id === detail) ?? null);
+    if (reserve && publicPlaces.some((place) => place.id === reserve)) router.replace(`/checkout?place=${reserve}`);
+  }, [params, router, publicPlaces]);
 
-  const regions = [...new Set(mockPlaces.map((place) => place.region.az))];
-  const categories = [...new Set(mockPlaces.map((place) => place.category.az))];
+  const regions = [...new Set(publicPlaces.map((place) => place.region.az))];
+  const categories = [...new Set(publicPlaces.map((place) => place.category.az))];
   const hasActiveFilters = query !== "" || region !== "all" || category !== "all";
   const resetFilters = () => { setQuery(""); setRegion("all"); setCategory("all"); };
-  const visiblePlaces = useMemo(() => mockPlaces.filter((place) => {
+  const visiblePlaces = useMemo(() => publicPlaces.filter((place) => {
     const text = placeText(place, language);
     return (!query || `${text.name} ${text.region} ${text.category}`.toLowerCase().includes(query.toLowerCase()))
       && (region === "all" || place.region.az === region)
       && (category === "all" || place.category.az === category);
-  }), [query, region, category, language]);
+  }), [query, region, category, language, publicPlaces]);
 
   return <AppShell>
     <div className="page-stack">
