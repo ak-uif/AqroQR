@@ -410,3 +410,33 @@ button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,te
   .mobile-nav { right:8px; left:8px; padding:7px; }
   .mobile-nav a { font-size:9px; }
 }
+
+/* Keep Leaflet's internal panes inside the map, below mobile navigation. */
+.map-panel,.dashboard-map-canvas { isolation:isolate; z-index:0; min-width:0; }
+.map-layout,.dashboard-map-layout,.page-stack { min-width:0; }
+.filter-panel { grid-template-columns:minmax(0,1.6fr) repeat(2,minmax(0,1fr)) auto; }
+.filter-panel .search-field,.filter-panel>select { min-width:0; }
+.filter-reset { min-height:44px; padding:0 14px; border:1px solid var(--line); border-radius:12px; color:var(--green-dark); background:var(--surface-soft); font-size:12px; font-weight:800; cursor:pointer; }
+.filter-reset:hover:not(:disabled) { border-color:#a6c49b; background:#e8f2e3; }
+.filter-reset:disabled { color:var(--muted); opacity:.6; cursor:not-allowed; }
+@media (max-width:900px) {
+  .filter-panel { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .filter-panel .search-field { grid-column:1 / -1; }
+}
+@media (max-width:800px) {
+  .app-layout { height:100vh; height:100dvh; min-height:0; display:grid; grid-template-rows:minmax(0,1fr) auto; overflow:hidden; }
+  .app-main { min-height:0; overflow-x:hidden; overflow-y:auto; }
+  .app-sidebar { z-index:1200; visibility:hidden; pointer-events:none; }
+  .app-sidebar--open { visibility:visible; pointer-events:auto; }
+  .sidebar-overlay { z-index:1100; }
+  .mobile-nav { position:relative; z-index:1000; inset:auto; min-width:0; margin:0 12px max(10px,env(safe-area-inset-bottom)); }
+  .app-content { padding-bottom:32px; }
+  .site-footer { padding-bottom:22px; }
+}
+@media (max-width:560px) {
+  .filter-panel { grid-template-columns:minmax(0,1fr); }
+  .filter-panel .search-field { grid-column:auto; }
+}
+@media (max-width:380px) {
+  .mobile-nav { margin-right:8px; margin-left:8px; }
+}
