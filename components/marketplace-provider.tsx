@@ -86,7 +86,7 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
     const previous = products.find((item) => item.id === id && item.farmerId === farmerId);
     const itemId = previous?.id ?? crypto.randomUUID();
     const uploadedImage = input.image.startsWith("blob:") ? input.image : "";
-    const item: Product = { ...input, image: uploadedImage ? "" : input.image, id: itemId, farmerId, status, createdAt: previous?.createdAt ?? new Date().toISOString() };
+    const item: Product = { ...input, image: uploadedImage ? "" : input.image, id: itemId, farmerId, status, createdAt: previous?.createdAt ?? new Date().toISOString(), updatedAt: new Date().toISOString() };
     setImagePreviews((current) => { const next = { ...current }; if (uploadedImage) next[itemId] = uploadedImage; else delete next[itemId]; return next; });
     setProducts((current) => previous ? current.map((product) => product.id === item.id ? item : product) : [item, ...current]);
     return uploadedImage ? { ...item, image: uploadedImage } : item;

@@ -9,12 +9,14 @@ export type Farmer = {
   id: string; firstName: string; lastName: string; email: string; phone: string;
   farmName: string; region: string; farmType: string; mainProducts: string;
   description: string; image: string; status: ReviewStatus; createdAt: string;
+  soilType?: string; irrigation?: string; previousExperience?: string;
 };
 export type Product = {
   id: string; farmerId: string; name: string; category: string; price: number;
   unit: string; quantity: number; region: string; description: string;
   harvestDate: string; delivery: DeliveryMethod; contact: string;
-  image: string; status: ListingStatus; createdAt: string;
+  image: string; status: ListingStatus; createdAt: string; updatedAt?: string;
+  soilFertility?: string; irrigation?: string; plantingDate?: string; previousExperience?: string;
 };
 export type FarmEvent = {
   id: string; farmerId: string; name: string; image: string; kind: string;
