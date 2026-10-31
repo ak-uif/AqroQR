@@ -39,6 +39,7 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
   const [orders, setOrders] = useState<MarketOrder[]>([]);
   const [farmerId, setFarmerId] = useState<string | null>(null);
   const [privateContacts, setPrivateContacts] = useState<Record<string, PrivateOrderContact>>({});
+  const [imagePreviews, setImagePreviews] = useState<Record<string, string>>({});
 
   useEffect(() => {
     setFarmers(read("farmers", seedFarmers));
@@ -55,8 +56,10 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
   useEffect(() => { if (ready) localStorage.setItem(key("farmer"), JSON.stringify(farmerId)); }, [farmerId, ready]);
 
   const currentFarmer = farmers.find((item) => item.id === farmerId) ?? null;
-  const publicProducts = products.filter((item) => item.status === "approved" && farmers.some((farmer) => farmer.id === item.farmerId && farmer.status === "approved"));
-  const publicPlaces = useMemo(() => [...mockPlaces, ...events.filter((item) => item.status === "approved" && farmers.some((farmer) => farmer.id === item.farmerId && farmer.status === "approved")).map(eventToPlace)], [events, farmers]);
+  const visibleProducts = useMemo(() => products.map((item) => imagePreviews[item.id] ? { ...item, image: imagePreviews[item.id] } : item), [products, imagePreviews]);
+  const visibleEvents = useMemo(() => events.map((item) => imagePreviews[item.id] ? { ...item, image: imagePreviews[item.id] } : item), [events, imagePreviews]);
+  const publicProducts = visibleProducts.filter((item) => item.status === "approved" && farmers.some((farmer) => farmer.id === item.farmerId && farmer.status === "approved"));
+  const publicPlaces = useMemo(() => [...mockPlaces, ...visibleEvents.filter((item) => item.status === "approved" && farmers.some((farmer) => farmer.id === item.farmerId && farmer.status === "approved")).map(eventToPlace)], [visibleEvents, farmers]);
   const registerFarmer = (input: FarmerInput) => {
     const farmer: Farmer = { ...input, id: crypto.randomUUID(), status: "pending", createdAt: new Date().toISOString() };
     setFarmers((current) => [farmer, ...current]);
@@ -81,9 +84,12 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
   const saveProduct = (input: ProductInput, status: "draft" | "pending", id?: string) => {
     if (!farmerId) return null;
     const previous = products.find((item) => item.id === id && item.farmerId === farmerId);
-    const item: Product = { ...input, id: previous?.id ?? crypto.randomUUID(), farmerId, status, createdAt: previous?.createdAt ?? new Date().toISOString() };
+    const itemId = previous?.id ?? crypto.randomUUID();
+    const uploadedImage = input.image.startsWith("blob:") ? input.image : "";
+    const item: Product = { ...input, image: uploadedImage ? "" : input.image, id: itemId, farmerId, status, createdAt: previous?.createdAt ?? new Date().toISOString() };
+    setImagePreviews((current) => { const next = { ...current }; if (uploadedImage) next[itemId] = uploadedImage; else delete next[itemId]; return next; });
     setProducts((current) => previous ? current.map((product) => product.id === item.id ? item : product) : [item, ...current]);
-    return item;
+    return uploadedImage ? { ...item, image: uploadedImage } : item;
   };
   const updateProductStatus = (id: string, status: ListingStatus) => {
     setProducts((current) => current.map((item) => item.id === id && item.farmerId === farmerId ? { ...item, status } : item));
@@ -91,9 +97,12 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
   const saveEvent = (input: EventInput, status: "draft" | "pending", id?: string) => {
     if (!farmerId) return null;
     const previous = events.find((item) => item.id === id && item.farmerId === farmerId);
-    const item: FarmEvent = { ...input, id: previous?.id ?? crypto.randomUUID(), farmerId, status, createdAt: previous?.createdAt ?? new Date().toISOString() };
+    const itemId = previous?.id ?? crypto.randomUUID();
+    const uploadedImage = input.image.startsWith("blob:") ? input.image : "";
+    const item: FarmEvent = { ...input, image: uploadedImage ? "" : input.image, id: itemId, farmerId, status, createdAt: previous?.createdAt ?? new Date().toISOString() };
+    setImagePreviews((current) => { const next = { ...current }; if (uploadedImage) next[itemId] = uploadedImage; else delete next[itemId]; return next; });
     setEvents((current) => previous ? current.map((event) => event.id === item.id ? item : event) : [item, ...current]);
-    return item;
+    return uploadedImage ? { ...item, image: uploadedImage } : item;
   };
   const updateEventStatus = (id: string, status: ListingStatus) => {
     setEvents((current) => current.map((item) => item.id === id && item.farmerId === farmerId ? { ...item, status } : item));
@@ -108,7 +117,7 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
   const updateOrderStatus = (id: string, status: OrderStatus) => {
     setOrders((current) => current.map((item) => item.id === id && item.farmerId === farmerId ? { ...item, status } : item));
   };
-  const value = { ready, farmers, products, events, orders, farmerId, currentFarmer, publicProducts, publicPlaces, privateContacts,
+  const value = { ready, farmers, products: visibleProducts, events: visibleEvents, orders, farmerId, currentFarmer, publicProducts, publicPlaces, privateContacts,
     registerFarmer, enterFarmer, leaveFarmer, updateFarmer, reviewFarmer, saveProduct, updateProductStatus, saveEvent, updateEventStatus, createOrder, updateOrderStatus };
   return <Market.Provider value={value}>{children}</Market.Provider>;
 }
